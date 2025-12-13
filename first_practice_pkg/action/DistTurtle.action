@@ -1,0 +1,9 @@
+# 1. Goal (target): distance
+float32 dist
+---
+# 2. Result (result): moved distance, take time
+float32 total_dist
+float32 total_time
+---
+# 3. Feedback (feedback): leftover distance
+float32 remained_dist
