@@ -12,6 +12,7 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(rclcpp_action REQUIRED)
+find_package(turtlesim REQUIRED)
 # 2. 서비스 인터페이스 생성
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/ResetPath.srv"
@@ -67,6 +68,15 @@ ament_target_dependencies(dist_turtle_action_client
 # 생성된 액션 인터페이스 라이브러리 연결 (필수!)
 target_link_libraries(dist_turtle_action_client "${cpp_typesupport_target}")
 
+# H. Turtle Patrol (심화: 순찰대)
+add_executable(turtle_patrol src/turtle_patrol.cpp)
+ament_target_dependencies(turtle_patrol 
+  rclcpp 
+  rclcpp_action 
+  turtlesim  # Turtlesim 액션 사용을 위해 필요할 수 있음 (메시지 의존성)
+)
+target_link_libraries(turtle_patrol "${cpp_typesupport_target}")
+
 # 5. 설치 규칙
 install(TARGETS
   talker
@@ -76,7 +86,13 @@ install(TARGETS
   reset_path_client
   dist_turtle_action_server
   dist_turtle_action_client
+  turtle_patrol
   DESTINATION lib/${PROJECT_NAME}
+)
+
+# 6. Launch 파일 설치 (추가됨)
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()
