@@ -45,6 +45,8 @@ ros2 run first_practice_pkg turtle_cmd
 ## 📂 Project Structure
 ```text
 first_practice_pkg/
+├── launch/
+│   └── turtle_launch.py       # Launch file for patrol + server
 ├── action/
 │   └── DistTurtle.action      # Action Interface Definition
 ├── srv/
@@ -56,7 +58,37 @@ first_practice_pkg/
 │   ├── reset_path_server.cpp  # Service Server
 │   ├── reset_path_client.cpp  # Service Client
 │   ├── dist_turtle_action_server.cpp # Action Server
-│   └── dist_turtle_action_client.cpp # Action Client
+│   ├── dist_turtle_action_client.cpp # Action Client
+│   └── turtle_patrol.cpp      # Advanced: Patrol Node (Action/Service Client)
 ├── CMakeLists.txt             # Build configuration
 └── package.xml                # Package dependencies
 ```
+
+## 🐢 Patrol Turtle (A to Z)
+
+The Patrol Turtle implementation demonstrates a more advanced control flow using **ROS 2 Actions and Services**, rather than simple Topics.
+
+### A. Concept
+The "Patrol" behavior involves robust navigation between points. We use **Actions** for long-running movement tasks (providing feedback) and **Services** for instantaneous requests (reporting completion).
+
+### B. Implementation (The "How-To")
+1. **Action Clients**: 
+   - `DistTurtle`: Moves the turtle forward by a specific distance.
+   - `RotateAbsolute`: Rotates the turtle to a specific absolute angle.
+2. **Service Client**: 
+   - `ResetPath`: Reports to the headquarters (Server) when the patrol is complete.
+3. **Logic (State Machine)**:
+   - **Step 1**: Send `DistTurtle` goal (Move 2m).
+   - **Step 2**: On success, send `RotateAbsolute` goal (Rotate 90 deg).
+   - **Step 3**: Repeat 4 times to draw a square.
+   - **Step 4**: Call `ResetPath` service to finish.
+
+### C. Execution
+Use the launch file to start the simulator, action server, service server, and the patrol node all at once:
+```bash
+ros2 launch first_practice_pkg turtle_launch.py
+```
+
+### Z. Key Takeaway
+By the end of this exercise, you understand how to coordinate multiple ROS 2 communication patterns (Actions for movement, Services for transactions) to create a complex robot behavior.
+
